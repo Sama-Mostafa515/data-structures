@@ -4,8 +4,8 @@ makenull is called. Try to resolve this issue.*/
 void DoublyListMakeNull() {
     Node* current = head;
     while (current != nullptr) {
-        Node* temp = curr;
-        curr = curr->next;
+        Node* temp = current;
+        current = current->next;
         delete temp;
     }
     head = nullptr;
