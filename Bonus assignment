@@ -10,7 +10,7 @@ void DoublyListMakeNull() {
     }
     head = nullptr;
     tail = nullptr;
-    counter = 0;
+    length = 0;
 }
 
 
