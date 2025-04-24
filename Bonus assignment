@@ -1,16 +1,84 @@
 /* 1) The code didn’t provide a way to cleanup the memory allocated when
 makenull is called. Try to resolve this issue.*/
 
-void DoublyListMakeNull() {
-    Node* current = head;
-    while (current != nullptr) {
-        Node* temp = current;
-        current = current->next;
-        delete temp;
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+    Node* prev;
+};
+
+class DoublyLinkedList {
+private:
+    Node* head;
+    Node* tail;
+    int length;
+public:
+    DoublyLinkedList() {
+        head = tail = nullptr;
+        length = 0;
     }
-    head = nullptr;
-    tail = nullptr;
-    length = 0;
+
+    bool isEmpty() {
+        return (head == nullptr);
+    }
+
+   void insert(int item) {
+        Node* newNode = new Node;
+        newNode->data = item;
+        newNode->next = nullptr;
+        newNode->prev = nullptr;
+
+        if (head == nullptr) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
+        }
+    }
+
+      void printList(){
+    Node* current = head;
+    while(current != nullptr){
+        cout << current -> data << " -> " ;
+        current = current -> next;
+    }
+
+     cout << "NULL" << endl;
+    }
+
+    void makenull() {
+        Node* current = head;
+        while (current != nullptr) {
+            Node* nextNode = current->next;
+            delete current;
+            current = nextNode;
+        }
+        head = nullptr;
+        tail = nullptr;
+        cout << "List has been cleared." << endl;
+    }
+
+    ~DoublyLinkedList() {
+        makenull();
+    }
+};
+
+int main() {
+    DoublyLinkedList d;
+    d.insert(10);
+    d.insert(20);
+    d.insert(30);
+    cout << "Before makenull:" << endl;
+    d.printList();
+    d.makenull();
+    cout << "After makenull:" << endl;
+    d.printList();
+
+    return 0;
 }
 
 
