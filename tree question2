@@ -1,0 +1,136 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* right;
+    Node* left;
+
+    Node(int value) {
+        data = value;
+        right = left = NULL;
+    }
+};
+
+class BST {
+public:
+    Node* root;
+
+    BST() {
+        root = NULL;
+    }
+
+    Node* insert(Node* root, int item) {
+        if (root == NULL) {
+            return new Node(item);
+        }
+        if (item > root->data) {
+            root->right = insert(root->right, item);
+        } else {
+            root->left = insert(root->left, item);
+        }
+        return root;
+    }
+
+    void insert(int item) {
+        root = insert(root, item);
+    }
+
+    void preorder(Node* root) {
+        if (root == NULL) return;
+        cout << root->data << "\t";
+        preorder(root->left);
+        preorder(root->right);
+    }
+
+    void inorder(Node* root) {
+        if (root == NULL) return;
+        inorder(root->left);
+        cout << root->data << "\t";
+        inorder(root->right);
+    }
+
+    void postorder(Node* root) {
+        if (root == NULL) return;
+        postorder(root->left);
+        postorder(root->right);
+        cout << root->data << "\t";
+    }
+
+    Node* findMax(Node* root) {
+        if (root == NULL || root->right == NULL) return root;
+        return findMax(root->right);
+    }
+
+    Node* deleteNode(Node* root, int item) {
+        if (root == NULL) return NULL;
+
+        if (item < root->data) {
+            root->left = deleteNode(root->left, item);
+        } else if (item > root->data) {
+            root->right = deleteNode(root->right, item);
+        } else {
+            if (root->left == NULL && root->right == NULL) {
+                delete root;
+                return NULL;
+            } else if (root->left != NULL && root->right == NULL) {
+                Node* temp = root;
+                root = root->left;
+                delete temp;
+            } else if (root->left == NULL && root->right != NULL) {
+                Node* temp = root;
+                root = root->right;
+                delete temp;
+            } else {
+                Node* max = findMax(root->left);
+                root->data = max->data;
+                root->left = deleteNode(root->left, max->data);
+            }
+        }
+        return root;
+    }
+
+    void display(Node* root, int space = 0, int height = 10) {
+        if (root == NULL) return;
+        space += height;
+        display(root->right, space);
+        for (int i = height; i < space; i++) cout << " ";
+        cout << root->data << endl;
+        display(root->left, space);
+    }
+};
+
+int main() {
+    BST tree;
+
+    tree.insert(40);
+    tree.insert(20);
+    tree.insert(66);
+    tree.insert(100);
+    tree.insert(32);
+    tree.insert(51);
+    tree.insert(78);
+
+    cout << "Tree after insertion:\n";
+    tree.display(tree.root);
+
+    cout << "Inorder traversal:\n";
+    tree.inorder(tree.root);
+
+    cout << "\nPreorder traversal:\n";
+    tree.preorder(tree.root);
+
+    cout << "\nPostorder traversal:\n";
+    tree.postorder(tree.root);
+    cout << endl;
+
+    tree.root = tree.deleteNode(tree.root, 66);
+    cout << "\nTree after deleting 66:\n";
+    tree.display(tree.root);
+
+    cout << "Inorder traversal after deletion:\n";
+    tree.inorder(tree.root);
+    cout << endl;
+
+    return 0;
+}
