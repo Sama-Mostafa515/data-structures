@@ -1,0 +1,88 @@
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+class Queue{
+private:
+	struct Node {
+		char item;
+		Node* next;
+	};
+	Node* front;
+	Node* rear;
+	int length;
+
+public:
+	Queue() {
+		front = rear = nullptr;
+		length = 0;
+	}
+
+	bool isEmpty() {
+		return length == 0;
+	}
+
+	void enqueue(char item) {
+		Node* newNode = new Node;
+		newNode->item = item;
+		newNode->next = nullptr;
+		if (length == 0) {
+			front = rear = newNode;
+		} else {
+			rear->next = newNode;
+			rear = newNode;
+		}
+		length++;
+	}
+
+	void dequeue() {
+		if (isEmpty())
+			return;
+		Node* temp = front;
+		front = front->next;
+		delete temp;
+		length--;
+		if (length == 0)
+			rear = nullptr;
+	}
+
+	char getFront() {
+		if (!isEmpty())
+			return front->item;
+		return '\0';
+	}
+};
+
+bool isPalindrome(string& str) {
+	Queue q;
+	stack<char> stack;
+
+	for (int i = 0; i < str.size(); i++) {
+    char ch = str[i];
+    q.enqueue(ch);
+    stack.push(ch);
+}
+
+	while (!q.isEmpty()) {
+		if (q.getFront() != stack.top())
+			return false;
+		q.dequeue();
+		stack.pop();
+	}
+
+	return true;
+}
+
+int main() {
+	string input;
+	cout << "Enter a string: ";
+	getline(cin, input);
+
+	if (isPalindrome(input))
+		cout << "The string is a palindrome\n";
+	else
+		cout << "The string is not a palindrome\n";
+
+	return 0;
+}
