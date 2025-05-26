@@ -1,0 +1,80 @@
+#include <iostream>
+using namespace std;
+
+class Stack {
+private:
+    struct Node {
+        char item;
+        Node* next;
+    };
+    Node* top;
+
+public:
+    Stack() {
+        top = nullptr;
+    }
+
+    bool isEmpty() {
+        return top == nullptr;
+    }
+
+    void push(char newItem) {
+        Node* newNode = new Node;
+        newNode->item = newItem;
+        newNode->next = top;
+        top = newNode;
+    }
+
+    void pop() {
+        if (!isEmpty()) {
+            Node* temp = top;
+            top = top->next;
+            delete temp;
+        }
+    }
+
+    int getTop() {
+        if (!isEmpty()) {
+            return (int)top->item;
+        } else {
+            return -1;
+        }
+    }
+};
+
+bool isMatch(char open, char close) {
+    return (open == '(' && close == ')') ||
+           (open == '{' && close == '}') ||
+           (open == '[' && close == ']');
+}
+
+bool checkDelimiters(const string& expr) {
+    Stack s;
+    for (char ch : expr) {
+        if (ch == '(' || ch == '{' || ch == '[') {
+            s.push(ch);
+        } else if (ch == ')' || ch == '}' || ch == ']') {
+            if (s.isEmpty()) return false;
+            char topChar = (char)s.getTop();
+            s.pop();
+            if (!isMatch(topChar, ch)) return false;
+        }
+    }
+    return s.isEmpty();
+}
+
+int main() {
+    string input;
+    cout << " enter an expression with brackets: ";
+    getline(cin, input);
+
+    bool balanced = checkDelimiters(input);
+
+    if (balanced) {
+        cout << " The brackets are balanced \n";
+    } else {
+        cout << " The brackets are not balanced \n";
+    }
+
+    return 0;
+}
