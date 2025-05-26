@@ -1,0 +1,88 @@
+#include <iostream>
+using namespace std;
+
+struct Node{
+    int data;
+	Node* right;
+	Node* left;
+
+	Node(int value){
+	     data = value;
+	     right = left = NULL;
+	}
+};
+
+class BST {
+
+public:
+	Node* root;
+
+	BST() {
+		root = NULL;
+	}
+
+	Node* insert(Node* root, int item) {
+		if (root == NULL) {
+			Node* newNode = new Node(item);
+			return newNode;
+		} else if (item > root->data) {
+			root->right = insert(root->right, item);
+			return root;
+		} else {
+			root->left = insert(root->left, item);
+			return root;
+		}
+	}
+
+	void insert(int item) {
+		root = insert(root, item);
+	}
+
+	void preorder(Node* root) { //Root -> Left -> Right
+		if (root == NULL) return;
+		cout << root->data << "\t"; // 63 -> 41 -> 16 -> 25 -> 53 -> 46 -> 55 -> 74 -> 65 -> 64 -> 70
+
+		preorder(root->left);
+		preorder(root->right);
+	}
+
+	void inorder(Node* root) { //Left -> Root -> Right
+		if (root == NULL) return;
+		inorder(root->left);
+		cout << root->data << "\t"; // 16 -> 25 -> 41 -> 46 -> 53 -> 55 -> 63 -> 64 -> 65 -> 70 -> 74
+
+		inorder(root->right);
+	}
+
+	void postorder(Node* root) {//Left -> Right -> Root
+		if (root == NULL) return;
+		postorder(root->left);
+		postorder(root->right);
+		cout << root->data << "\t"; //25 -> 16 -> 46 -> 55 -> 53 -> 41 -> 64 -> 70 -> 65 -> 74 -> 63
+
+	}
+};
+
+int main() {
+	BST b;
+	int nodes[] = {63, 41, 74, 16, 53, 65, 25, 46, 55, 64, 70};
+
+	for (int i = 0; i < 11; i++) {
+		b.insert(nodes[i]);
+	}
+
+	cout << "InOrder: ";
+	b.inorder(b.root);
+	cout << "\n";
+
+	cout << "PreOrder: ";
+	b.preorder(b.root);
+	cout << "\n";
+
+	cout << "PostOrder: ";
+	b.postorder(b.root);
+	cout << "\n";
+
+	return 0;
+}
+
